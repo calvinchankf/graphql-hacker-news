@@ -9,7 +9,10 @@ class HackerNewsAPI {
     async getNewsfeed(query = 'graphql', page = 0) {
         const raw = await fetch(`${this.baseURL}search?query=${query}&page=${parseInt(page)}`)
         let result = await raw.json()
-        return result.hits;
+        // rename fields
+        return result.hits.map(item => Object.assign(item, {
+            id: item.objectID,
+        }))
     }
 }
 

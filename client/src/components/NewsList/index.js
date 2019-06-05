@@ -8,7 +8,7 @@ class NewsList extends Component {
         if (data.loading) {
             return (<div>Loading...</div>)
         }
-        const news = data.newsfeed.map((feed, idx) => (<li key={idx}>{feed.title}</li>))
+        const news = data.newsfeed.map(feed => (<li key={feed.id}>{feed.title}</li>))
         return (
             <div>
                 <ul id="news-list">

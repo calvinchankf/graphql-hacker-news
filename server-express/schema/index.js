@@ -19,6 +19,8 @@ const NewsfeedType = new GraphQLObjectType({
         title: { type: GraphQLString },
         author: { type: GraphQLString },
         url: { type: GraphQLString },
+        id: { type: GraphQLID },
+        points: { type: GraphQLInt },
     })
 });
 
