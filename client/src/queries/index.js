@@ -1,8 +1,8 @@
 import { gql } from 'apollo-boost';
 
 const getNewsQuery = gql`
-    {
-        newsfeed {
+    query GetNews($query: String) {
+        newsfeed(query: $query) {
             id
             title
             author

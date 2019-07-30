@@ -1,3 +1,13 @@
 # graphql-hacker-news
 
-WIP
+Start Server
+---
+```
+yarn start
+```
+
+Start Web
+---
+```
+yarn start
+```
