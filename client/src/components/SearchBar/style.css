@@ -1,0 +1,12 @@
+.search-bar {
+    background-color: #ff6600;
+    padding: 10px;
+}
+
+.search-bar label {
+    font-weight: bold;
+}
+
+.search-bar input:first-child {
+    margin: 0px 10px 0px 10px;
+}

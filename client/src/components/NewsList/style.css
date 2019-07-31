@@ -1,0 +1,10 @@
+.news {
+    margin: auto;
+    width: 80%;
+}
+@media only screen and (max-width: 576px) {
+    .news {
+        margin: auto;
+        width: 100%;
+    }
+}

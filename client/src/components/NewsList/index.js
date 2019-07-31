@@ -2,13 +2,14 @@ import React, { Component } from 'react';
 import { graphql, Query } from 'react-apollo';
 import { getNewsQuery } from '../../queries';
 import SearchBar from '../SearchBar'
-
+import NewsCell from '../NewsCell';
+import './style.css'
 
 class NewsList extends Component {
 
     constructor(props) {
         super(props)
-        this.state = { searchKey: "calvin" }
+        this.state = { searchKey: "" }
     }
 
     componentDidMount() {
@@ -48,17 +49,31 @@ class NewsList extends Component {
                 variables={{ query: searchKey }}
             >
                 {({ loading, error, data, fetchMore }) => {
+                    if (error) return <div>Error</div>
+
+                    if (searchKey.length === 0) {
+                        return (
+                            <div className="news">
+                                <SearchBar searchKey={searchKey} searchOnChange={this.searchOnChange} />
+                            </div>
+
+                        )
+                    }
+
                     if (loading) {
                         return (<div>Loading...</div>)
                     }
-                    if (error) return <div>Error</div>;
-                    const news = data.newsfeed.map((feed, idx) => (<li key={idx}>{feed.title}</li>))
+
+                    const news = data.newsfeed.map((feed, idx) => (
+                        <NewsCell key={idx} idx={idx} feed={feed} />
+                    ))
+
                     return (
-                        <div>
+                        <div className="news">
                             <SearchBar searchKey={searchKey} searchOnChange={this.searchOnChange} />
-                            <ul id="news-list">
+                            <div id="news-list">
                                 {news}
-                            </ul>
+                            </div>
                             <button onClick={() => { this.onLoadMore(fetchMore, news) }}>
                                 Load More
                             </button>

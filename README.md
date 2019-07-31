@@ -23,9 +23,9 @@ Features
     - [x] read
     - [x] search
     - [x] load more
+    - [x] style
     - [ ] infinite scroll
-    - [ ] style
 
 Screenshots
 ---
-![](./demo.png)
+![](./demo.gif)
