@@ -7,17 +7,17 @@ import NewsList from './components/NewsList'
 
 // apollo client setup
 const client = new ApolloClient({
-  uri: 'http://localhost:4000/graphql'
+    uri: 'http://localhost:4000/graphql'
 });
 
 function App() {
-  return (
-    <ApolloProvider client={client}>
-      <div id="main">
-        <NewsList />
-      </div>
-    </ApolloProvider>
-  );
+    return (
+        <ApolloProvider client={client}>
+            <div id="main">
+                <NewsList />
+            </div>
+        </ApolloProvider>
+    );
 }
 
 export default App;

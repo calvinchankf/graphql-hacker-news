@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
-import { graphql } from 'react-apollo';
+import { graphql, Query } from 'react-apollo';
 import { getNewsQuery } from '../../queries';
 import SearchBar from '../SearchBar'
+
+
 class NewsList extends Component {
 
     constructor(props) {
         super(props)
         this.state = {
-            searchKey: "calvin"
+            searchKey: "calvin",
         }
     }
 
@@ -30,18 +32,47 @@ class NewsList extends Component {
     }
 
     render = () => {
-        const data = this.props.data
-        if (data.loading) {
-            return (<div>Loading...</div>)
-        }
-        const news = data.newsfeed.map(feed => (<li key={feed.id}>{feed.title}</li>))
+
+        const { searchKey, page } = this.state
+
         return (
-            <div>
-                <SearchBar searchKey={this.state.searchKey} searchOnChange={this.searchOnChange} />
-                <ul id="news-list">
-                    {news}
-                </ul>
-            </div>
+            <Query
+                query={getNewsQuery}
+                variables={{ query: searchKey }}
+            >
+                {({ loading, error, data, fetchMore }) => {
+                    if (loading) {
+                        return (<div>Loading...</div>)
+                    }
+                    if (error) return <div>Error</div>;
+                    const news = data.newsfeed.map((feed, idx) => (<li key={idx}>{feed.title}</li>))
+                    return (
+                        <div>
+                            <SearchBar searchKey={searchKey} searchOnChange={this.searchOnChange} />
+                            <ul id="news-list">
+                                {news}
+                            </ul>
+                            <button
+                                onClick={() => {
+                                    fetchMore({
+                                        variables: {
+                                            page: news.length / 20
+                                        },
+                                        updateQuery: (prev, { fetchMoreResult }) => {
+                                            if (!fetchMoreResult) return prev;
+                                            return Object.assign({}, prev, {
+                                                newsfeed: [...prev.newsfeed, ...fetchMoreResult.newsfeed]
+                                            });
+                                        }
+                                    })
+                                }}
+                            >
+                                Load More
+                            </button>
+                        </div>
+                    )
+                }}
+            </Query>
         )
     }
 }

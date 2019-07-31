@@ -15,10 +15,15 @@ yarn start
 
 Features
 ---
-- basic backend graphQL interface of hacker news
+- backend
+    - [x] basic backend graphQL interface of hacker news
 - frontend
-    - read
-    - search
-    - load more(WIP)
+    - [x] read
+    - [x] search
+    - [x] load more
+    - [ ] infinite scroll
+    - [ ] style
 
+Screenshots
+---
 ![](./demo.png)
