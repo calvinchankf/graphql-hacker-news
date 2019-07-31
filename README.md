@@ -4,13 +4,15 @@ Build Hacker News with GraphQL
 Start Server
 ---
 ```
-yarn start
+$ cd server-express
+$ yarn start
 ```
 
 Start Web
 ---
 ```
-yarn start
+$ cd client
+$ yarn start
 ```
 
 Features

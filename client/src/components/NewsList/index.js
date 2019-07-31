@@ -8,9 +8,7 @@ class NewsList extends Component {
 
     constructor(props) {
         super(props)
-        this.state = {
-            searchKey: "calvin",
-        }
+        this.state = { searchKey: "calvin" }
     }
 
     componentDidMount() {
@@ -18,22 +16,31 @@ class NewsList extends Component {
     }
 
     searchOnChange = key => {
-        this.setState({
-            searchKey: key
-        }, () => {
-            this.mututeSearchQuery()
-        })
+        this.setState({ searchKey: key }, () => { this.mututeSearchQuery() })
     }
 
     mututeSearchQuery = () => {
-        this.props.data.refetch({
-            query: this.state.searchKey
+        this.props.data.refetch({ query: this.state.searchKey })
+    }
+
+    onLoadMore = (fetchMore, news) => {
+        // TODO: debouncing
+        fetchMore({
+            variables: {
+                page: news.length / 20
+            },
+            updateQuery: (prev, { fetchMoreResult }) => {
+                if (!fetchMoreResult) return prev;
+                return Object.assign({}, prev, {
+                    newsfeed: [...prev.newsfeed, ...fetchMoreResult.newsfeed]
+                });
+            }
         })
     }
 
     render = () => {
 
-        const { searchKey, page } = this.state
+        const { searchKey } = this.state
 
         return (
             <Query
@@ -52,21 +59,7 @@ class NewsList extends Component {
                             <ul id="news-list">
                                 {news}
                             </ul>
-                            <button
-                                onClick={() => {
-                                    fetchMore({
-                                        variables: {
-                                            page: news.length / 20
-                                        },
-                                        updateQuery: (prev, { fetchMoreResult }) => {
-                                            if (!fetchMoreResult) return prev;
-                                            return Object.assign({}, prev, {
-                                                newsfeed: [...prev.newsfeed, ...fetchMoreResult.newsfeed]
-                                            });
-                                        }
-                                    })
-                                }}
-                            >
+                            <button onClick={() => { this.onLoadMore(fetchMore, news) }}>
                                 Load More
                             </button>
                         </div>
