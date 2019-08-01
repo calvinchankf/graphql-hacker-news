@@ -4,7 +4,7 @@ Build Hacker News with GraphQL
 Start Server
 ---
 ```
-$ cd server-express
+$ cd server
 $ yarn start
 ```
 
