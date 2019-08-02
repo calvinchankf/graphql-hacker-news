@@ -28,4 +28,4 @@ Features
 
 Screenshots
 ---
-![](./demo.gif)
+![](./preview.gif)
