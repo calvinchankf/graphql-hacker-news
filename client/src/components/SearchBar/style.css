@@ -7,6 +7,10 @@
     font-weight: bold;
 }
 
+.search-bar input {
+    font-size: large;
+}
+
 .search-bar input:first-child {
     margin: 0px 10px 0px 10px;
 }

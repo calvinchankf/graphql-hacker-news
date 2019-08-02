@@ -8,3 +8,18 @@
         width: 100%;
     }
 }
+
+.infinit-table-spinner {
+    margin: 64px auto 64px auto;
+    height: 32px;
+    width: 32px;
+    animation: rotate-spinner 1s infinite linear;
+    border: 4px solid #ff6600;
+    border-right-color: transparent;
+    border-radius: 50%;
+  }
+  
+  @keyframes rotate-spinner {
+    0%    { transform: rotate(0deg); }
+    100%  { transform: rotate(360deg); }
+  }

@@ -9,11 +9,19 @@ class NewsList extends Component {
 
     constructor(props) {
         super(props)
-        this.state = { searchKey: "" }
+        this.state = {
+            searchKey: "",
+            isLoadingMore: false,
+        }
     }
 
     componentDidMount() {
+        window.addEventListener('scroll', this.handleScroll);
         this.mututeSearchQuery()
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener('scroll', this.handleScroll);
     }
 
     searchOnChange = key => {
@@ -24,14 +32,29 @@ class NewsList extends Component {
         this.props.data.refetch({ query: this.state.searchKey })
     }
 
-    onLoadMore = (fetchMore, news) => {
-        // TODO: debouncing
+    handleScroll = e => {
+        let dom = e.target
+        const scrollTop = (dom.documentElement && dom.documentElement.scrollTop) || dom.body.scrollTop
+        const scrollHeight = (dom.documentElement && dom.documentElement.scrollHeight) || dom.body.scrollHeight;
+        const clientHeight = dom.documentElement.clientHeight || window.innerHeight;
+        if (
+            Math.ceil(scrollTop + clientHeight) >= scrollHeight &&
+            this.props.data.newsfeed &&
+            !this.state.isLoadingMore
+        ) {
+            this.onLoadMore(this.props.data.newsfeed)
+        }
+    }
+
+    onLoadMore = news => {
+        this.setState({ isLoadingMore: true })
+        const { fetchMore } = this.props.data
         fetchMore({
-            variables: {
-                page: news.length / 20
-            },
+            variables: { page: news.length / 20 },
             updateQuery: (prev, { fetchMoreResult }) => {
-                if (!fetchMoreResult) return prev;
+                if (!fetchMoreResult)
+                    return prev;
+                this.setState({ isLoadingMore: false })
                 return Object.assign({}, prev, {
                     newsfeed: [...prev.newsfeed, ...fetchMoreResult.newsfeed]
                 });
@@ -41,32 +64,31 @@ class NewsList extends Component {
 
     render = () => {
 
-        const { searchKey } = this.state
+        const { searchKey, isLoadingMore } = this.state
 
         return (
             <Query
                 query={getNewsQuery}
                 variables={{ query: searchKey }}
+                notifyOnNetworkStatusChange
             >
-                {({ loading, error, data, fetchMore }) => {
+                {({ loading, error, data }) => {
+
                     if (error) return <div>Error</div>
 
-                    if (searchKey.length === 0) {
-                        return (
-                            <div className="news">
-                                <SearchBar searchKey={searchKey} searchOnChange={this.searchOnChange} />
-                            </div>
-
-                        )
+                    // news cell
+                    let news = []
+                    if (!loading && data.newsfeed && searchKey.length > 0) {
+                        news = data.newsfeed.map((feed, idx) => (
+                            <NewsCell key={idx} idx={idx} feed={feed} />
+                        ))
                     }
 
-                    if (loading) {
-                        return (<div>Loading...</div>)
+                    // load more indicator
+                    let loadingIndicator = null
+                    if ((isLoadingMore || loading) && searchKey.length > 0) {
+                        loadingIndicator = (<div className="infinit-table-spinner"></div>)
                     }
-
-                    const news = data.newsfeed.map((feed, idx) => (
-                        <NewsCell key={idx} idx={idx} feed={feed} />
-                    ))
 
                     return (
                         <div className="news">
@@ -74,9 +96,7 @@ class NewsList extends Component {
                             <div id="news-list">
                                 {news}
                             </div>
-                            <button onClick={() => { this.onLoadMore(fetchMore, news) }}>
-                                Load More
-                            </button>
+                            {loadingIndicator}
                         </div>
                     )
                 }}

@@ -23,8 +23,8 @@ Features
     - [x] read
     - [x] search
     - [x] load more
+    - [x] infinite scroll
     - [x] style
-    - [ ] infinite scroll
 
 Screenshots
 ---
